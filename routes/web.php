@@ -12,5 +12,24 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('app');
+});
+
+Route::group(['middleware' => ['web']], function()
+{
+    Route::resource('items', 'ItemController');
+});
+
+//Templates
+
+Route::group(array('prefix'=>'/templates/'), function()
+{
+    Route::get('{template}', array( function($template)
+    {
+        $template = str_replace('.html', '', $template);
+
+        \Illuminate\Support\Facades\View::addExtension('html', 'php');
+
+        return View::make('templates.'.$template);
+    }));
 });
